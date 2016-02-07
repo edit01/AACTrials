@@ -10,6 +10,7 @@ It would also be wise to read the comprehensive data dictionary and other variou
 #TODO
 1. Cleanup scripts
 2. Provide some notes
+3. Change remote url
 
 
 
