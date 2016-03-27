@@ -1,15 +1,17 @@
 #!/usr/bin/python
-
 import argparse
 import re
 import io
+
+"""
+
+"""
 
 def prep(in_file):
     NCT = re.compile('^NCT[0-9]+\|')
     
     with io.open(in_file, 'r', encoding="utf-8-sig") as source:        
         header = source.readline().strip().split("|")        
-        #print ("\t").join(header).encode("utf-8")
         print ("|").join(header).encode("utf-8")
         cur = []
         for line in source:
