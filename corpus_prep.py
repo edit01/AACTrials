@@ -3,8 +3,6 @@
 import argparse
 import re
 import io
-import sys
-
 
 def prep(in_file):
     NCT = re.compile('^NCT[0-9]+\|')
