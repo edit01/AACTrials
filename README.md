@@ -11,7 +11,7 @@ It would also be wise to read the comprehensive data dictionary and other variou
 2. Undergoing discussion on what format to convert clinical trial detailed_description to.
 
 # USAGE
-`corpus_prep.py -in "path/to/file" > output.txt`
+`clean_raw.py -in "path/to/file" > output.txt`
 The resulting output file contains one clinical study record per line. Each line will lead with an NCT_ID.
 # CORPUS FORMAT IDEAS
 1. It should be considered an NLP corpus resource
