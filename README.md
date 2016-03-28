@@ -10,7 +10,10 @@ It would also be wise to read the comprehensive data dictionary and other variou
 1. Cleanup scripts
 2. Undergoing discussion on what format to convert clinical trial detailed_description to.
 
-# FORMAT
+# USAGE
+`corpus_prep.py -in "path/to/file" > output.txt`
+
+# CORPUS FORMAT IDEAS
 1. It should be considered an NLP corpus resource
 2. It should be easy to distribute, use, and understand
 3. It should be a common type format
