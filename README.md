@@ -6,11 +6,11 @@ Download the pipe delimited text output so you don't have to bother with install
 
 It would also be wise to read the comprehensive data dictionary and other various documentation files for this corpus before you begin. Why they use pipe delimited files...I do not know...
 
-#TODO
+# TODO
 1. Cleanup scripts
 2. Undergoing discussion on what format to convert clinical trial detailed_description to.
 
-#FORMAT
+# FORMAT
 1. It should be considered an NLP corpus resource
 2. It should be easy to distribute, use, and understand
 3. It should be a common type format
