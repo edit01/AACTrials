@@ -22,16 +22,16 @@ def prep(in_file):
             line = line.strip()    
             if line:
                 mo = re.match(NCT, line)
-                if mo:                    
+                if mo: #If NCT_ID matched                    
                     if cur != []:                        
                         trial = ("").join(cur).split("|")
                         print ("|").join(trial).encode("utf-8")
-
                         cur = []
                     cur.append(line)                    
                 else:
                     cur.append(line)
     return None
+
 # INPUT: raw/clinical_study.txt
 # OUTPUT: The output should be written out to a file where each line is a single pipe "|" delimited study record
 if __name__ == "__main__":
