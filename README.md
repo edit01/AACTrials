@@ -1,6 +1,7 @@
 #AACTrials
 Contains some scripts for the corpus prep.
 You can download the AACT corpus [here][1]
+Extract into a folder, "raw" if you wish to just use the .gitignore file
 
 Download the pipe delimited text output so you don't have to bother with installing OracleDB.The state of the pipe delimited text output is...unfavorable. You will need to make sure the character encoding matches up. UTF-8 is standard but that's hardly reliable when the source isn't entirely UTF-8.
 
@@ -11,7 +12,7 @@ It would also be wise to read the comprehensive data dictionary and other variou
 2. Undergoing discussion on what format to convert clinical trial detailed_description to.
 
 # USAGE
-`clean_raw.py -in "path/to/file" > output.txt`
+`corpus_prep.py -in "path/to/file" > output.txt`
 
 The resulting output file contains one clinical study record per line. Each line will lead with an NCT_ID.
 
