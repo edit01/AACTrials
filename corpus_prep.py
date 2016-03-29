@@ -1,15 +1,16 @@
-#!/usr/bin/python
+#/usr/bin/python
 import argparse
 import re
 import io
 
 """
-The clincal_study.txt file is what you see is what you get. All of the data for a single trial spans multiple lines in the same file. We therefore need to scan through the lines up until we hit the next study. We can do this pattern matching for the NCT_ID where NCT_ID represents the start of a trial. Text/lines preceding an NCT_ID should be considered part of the previous study.
+The clincal_study.txt file is WYSIWYG. All of the data for a single trial spans multiple lines in the same file. We therefore need to scan through the lines up until we hit the next study. We can do this pattern matching for the NCT_ID where NCT_ID represents the start of a trial. Text/lines preceding an NCT_ID should be considered part of the previous study.
 """
 
-def prep(in_file):
+def prep(in_file, fields):
     NCT = re.compile('^NCT[0-9]+\|')
     
+
     with io.open(in_file, 'r', encoding="utf-8-sig") as source:        
         header = source.readline().strip().split("|") # Read in the head line and store it in a var
         print ("|").join(header).encode("utf-8")
@@ -22,10 +23,15 @@ def prep(in_file):
             line = line.strip()    
             if line:
                 mo = re.match(NCT, line)
-                if mo: #If NCT_ID matched                    
+                if mo: # If NCT_ID matched                    
                     if cur != []:                        
-                        trial = ("").join(cur).split("|")
-                        print ("|").join(trial).encode("utf-8")
+                        trial = ("").join(cur) #Join into single line
+                        trial = trial.split("|") # Split by "|" delimiter
+
+                        # TODO
+                        # zip the header +trial so we get a dictionary of keys and values
+                        # We want to be able to select our keys easily given our fields file, then recombine into the resulting output
+                        print trial.encode("utf-8")
                         cur = []
                     cur.append(line)                    
                 else:
@@ -38,8 +44,15 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-in', required=True)
+    parser.add_argument('-fields')    
     args = parser.parse_args()
-
-    prep(getattr(args, 'in'))
     
+    # Read fields from file
+    if args.fields:
+        with open(args.fields) as fh:
+            fields = [x.strip('\n') for x in fh.readlines()]
+    
+        prep(getattr(args, 'in'), fields)
+    else:
+        prep(getattr(args, 'in'))
         
