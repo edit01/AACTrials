@@ -12,7 +12,7 @@ It would also be wise to read the comprehensive data dictionary and other variou
 2. Undergoing discussion on what format to convert clinical trial detailed_description to.
 
 # USAGE
-`corpus_prep.py -in "path/to/file" > output.txt`
+`corpus_prep.py -in "path/to/file" -fields "path/to/selected_fields_file" > output.txt`
 
 The resulting output file contains one clinical study record per line. Each line will lead with an NCT_ID.
 
