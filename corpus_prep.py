@@ -12,8 +12,8 @@ def prep(in_file, fields=None):
         columns = source.readline().strip().split("|") # Read in the head line and store it in a var
         print ("|").join(fields).encode("utf-8")
         
-        # Scan through each line and until we hit an NCT_ID. Until we do, append lines to the cursor list.
-        # When we do hit the next NCT_ID, join the resulting stored lines up until that point into one "|" delimited line.
+        # Scan through each line and until we hit an NCT_ID. Until we do, append lines to a list.
+        # When we do hit the next NCT_ID, join the stored lines up until that point into one "|" delimited line.
         # Reset the cursor list to [] or empty and repeat for the next NCT record.
         NCT = re.compile('^NCT[0-9]+\|')
         cur = []
@@ -24,13 +24,13 @@ def prep(in_file, fields=None):
                 if mo: # If NCT_ID matched                    
                     if cur != []:                        
                         study_row = ("").join(cur).split("|") #Join into single line
-                        joined_dict = dict(zip(columns, study_row))
-                        selected = [joined_dict[x] for x in fields]
-                        print ("|").join(selected).encode("utf-8")
                         
                         # zip column fields && study so we get a dictionary of keys and values
                         # We want to be able to select our values easily given
                         # our fields file (keys)
+                        joined_dict = dict(zip(columns, study_row))
+                        selected = [joined_dict[x] for x in fields]
+                        print ("|").join(selected).encode("utf-8")
                         cur = []
                     cur.append(line)                    
                 else:
