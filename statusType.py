@@ -1,9 +1,8 @@
-#!/usr/bin/python
+# statusType.py
 
 import argparse
 import io
 import codecs
-
 import numpy as np
 import matplotlib.mlab as mlab
 import matplotlib.pyplot as plt
@@ -19,81 +18,64 @@ def get_header(in_file):
 
 def status_frequency(in_file):
     with io.open(in_file, 'r', encoding="utf-8-sig") as fh:
-        header = fh.readline().strip().split("|")                
+        header = fh.readline().strip().split("|")
 
         status_frequency = defaultdict(int)
-        for line in fh:            
-            line = line.strip().split("|")   
+        for line in fh:
+            line = line.strip().split("|")
             study = dict(zip(header, line))
 
-            if "OVERALL_STATUS" in study:                
-                if len(study["OVERALL_STATUS"]) < 30:                    
-                    status_frequency[study["OVERALL_STATUS"]] += 1
-    freqs = defaultdict(int)                
-    freqs = {k: v for k, v in status_frequency.items() if v > 5}            
+            if "OVERALL_STATUS" in study and len(study['OVERALL_STATUS'] < 30):
+                status_frequency[study["OVERALL_STATUS"]] += 1
+    frequencies = defaultdict(int)
+    frequencies = {k: v for k, v in status_frequency.items() if v > 5}
 
-    return freqs
+    return frequencies
 
-def calculate_proportions(freqs):
+def calculate_proportions(frequencies):
+    '''Calculate frequency proportions'''
     pfreqs = defaultdict(float)
-    sumFreq = sum(freqs.values())
+    total = sum(frequencies.values())
 
-    for k, v in freqs.items():
-        p = float(v)/sumFreq
-        if p > .03:
-            pfreqs[k] = p
+    for k, v in frequencies.items():
+        proportion = float(v) / total
+        if proportion > .03:
+            pfreqs[k] = proportion
         else:
-            pfreqs["other"] += p
+            pfreqs["other"] += proportion
     return pfreqs
 
-#Pie chart it
 def generate_pie(values , labels):
-    
-    colors = ['yellowgreen', 'gold', 'lightskyblue', 'lightcoral']
-    #explode = (0, 0.1, 0 ,0)
+    '''Generate pie chart'''
 
-    plt.pie(values, explode=None, labels=labels, colors=colors, 
-        autopct='%1.1f%%', shadow=True, startangle=90)
+    colors = ['yellowgreen', 'gold', 'lightskyblue', 'lightcoral']
+    plt.pie(values, explode=None, labels=labels, colors=colors, autopct='%1.1f%%',
+            shadow=True, startangle=90)
     plt.axis('equal')
     plt.show()
     return None
 
 def study_type_frequency(in_file):
 
-    with io.open(in_file, 'r', encoding="utf-8-sig") as fh:        
+    with io.open(in_file, 'r', encoding="utf-8-sig") as fh:
         header = fh.readline().strip().split('|')
         print header
 
-        study_type_freq = defaultdict(int)
+        type_frequency = defaultdict(int)
         len_freq = defaultdict(int)
-        for line in fh:            
+        for line in fh:
             line = line.strip().split('|')
             len_freq[len(line)] += 1
             study = dict(zip(header, line))
-        
+
             if study["STUDY_TYPE"]:
-                study_type_freq[study["STUDY_TYPE"] + study["OVERALL_STATUS"]] += 1
-        
-        """
-        for k, v in study_type_freq.items():
-            print "%s => %s" % (k, v)
-        """
+                type_frequency[study["STUDY_TYPE"] + study["OVERALL_STATUS"]] += 1
 
-        """
-        print "\nSplit length:"
-        for k, v in len_freq.items():
-            print "%s => %s" % (k, v)
-        """
-        #filtered = {k: v for k, v in study_type_freq.items() if v > 30}
-    #return filtered
-    return study_type_freq
-
-
+    return type_frequency
 
 def date_frequency(trials):
     date_counts = defaultdict(int)
     for t in trials:
-        #print t
         date_object = datetime.strptime(t[1], '%B %d, %Y')
         date_counts[date_object.year] += 1
     return date_counts
@@ -108,7 +90,6 @@ def generate_line(counts, labels):
     return None
 
 def generate_hist(counts):
-
     N = len(counts)
     #menMeans   = (20, 35, 30, 35, 27)
     menMeans   = counts.values()
@@ -125,7 +106,7 @@ def generate_hist(counts):
     plt.ylabel('# studies registered')
     plt.xlabel('Year')
     plt.title('# Studies registered per year')
-    plt.xticks(ind+width/2., counts.keys() )
+    plt.xticks(ind+width/2., counts.keys())
     #plt.yticks(np.arange(0,81,10))
     #plt.legend( (p1[0], p2[0]), ('Men', 'Women') )
 
@@ -143,24 +124,23 @@ def process(in_file, add_terms):
             line = line.strip().split("|")
             study = dict(zip(header, line))
 
-            retrieved = [study[term] for term in terms] 
+            retrieved = [study[term] for term in terms]
             trials.append(retrieved)
             #print ("\t").join(retrieved)
     return trials
 
 if __name__ == "__main__":
-    
     parser = argparse.ArgumentParser()
     parser.add_argument('-in')
     parser.add_argument('-out')
     args = parser.parse_args()
 
     header = get_header(getattr(args, 'in'))
-    
+
     #Study Status: Completed/Ongoing..?
     """
-    freqs = status_frequency(getattr(args, 'in'))    
-    pfreqs = calculate_proportions(freqs)       
+    freqs = status_frequency(getattr(args, 'in'))
+    pfreqs = calculate_proportions(freqs)
     generate_pie(pfreqs.values(), pfreqs.keys())
     """
 
@@ -175,7 +155,7 @@ if __name__ == "__main__":
     # of studies registered by year
     """
     additional_terms = ['FIRSTRECEIVED_DATE']
-    trials = process(getattr(args, 'in'), additional_terms)    
+    trials = process(getattr(args, 'in'), additional_terms)
     date_counts = date_frequency(trials)
     generate_hist(date_counts)
     """
@@ -186,7 +166,7 @@ if __name__ == "__main__":
     date_counts_total = defaultdict(int)
     for k, v in date_counts.items():
         total += v
-        date_counts_total[k] = total        
+        date_counts_total[k] = total
         #print "%s => %s, %s" % (k, v, total)
     """
     """
@@ -200,23 +180,14 @@ if __name__ == "__main__":
 
     #print get_header(getattr(args,'in'))
     #Get study description?
-    
     #additional_terms = ['DETAILED_DESCRIPTION']
     additional_terms = ['BRIEF_SUMMARY', 'DETAILED_DESCRIPTION']
 
-
-    
     trials = process(getattr(args, 'in'), additional_terms)
     for i, trial in enumerate(trials):
         #print ("|").join(trial).encode('utf-8')
-        
         file_name = "output/%s_%s.txt" % (trial[0], i)
         with codecs.open(file_name, 'w', encoding='utf-8') as fh:
-            
             #fh.write(trial[1])
             data = trial[1] + trial[2]
-            fh.write(data)            
-        
-    
-
-        
+            fh.write(data)
